@@ -49,11 +49,15 @@ void Ssd1309::clearBuffer() {
 	}
 }
 
+//#define __REVERSE__
+
 void Ssd1309::pixel(uint8_t x, uint8_t y) {
 	if (x>128 || y>64) return;
-	uint8_t page = 8 - y / 8;
-	uint8_t row = 7 - y % 8;
-	buffer[page*128-x-1] |= 1<<row;
+	#ifdef __REVERSE__
+		buffer[(8-y/8)*128-x-1] |= 1<<(7-y%8);
+	#else
+		buffer[(y/8)*128+x] |= 1<<(y%8);
+	#endif
 }
 
 void Ssd1309::line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
@@ -91,12 +95,12 @@ void Ssd1309::sprite(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t* sprite
 	}
 }
 
-void Ssd1309::print(uint8_t x, uint8_t y, char* str) {
-	uint8_t c=0;
+void Ssd1309::print(uint8_t x, uint8_t y, String str) {
+	uint8_t c=0,i,d, pattern;
 	while (str[c] != '\0') {
-		for (uint8_t i=0;i<6;i++) {
-			uint8_t pattern = font[str[c] - 32][i];
-			for (uint8_t d = 0; d<8;d++) {
+		for (i=0;i<6;i++) {
+			pattern = font[str[c] - 32][i];
+			for (d = 0; d<8;d++) {
 				if (pattern & (1<<d)) {
 					pixel(x+c*6+i,y+d);
 				}
