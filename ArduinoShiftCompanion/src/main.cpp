@@ -94,8 +94,10 @@ void loop() {
 	if (y<=2) dy = 1;
 }
 
+uint8_t cmd = 0x00;
+
 void serialEvent() {
 	if (Serial.available()) {
-		char c = (char)Serial.read();
+		uint8_t c = (uint8_t)Serial.read();
 	}
 }

@@ -99,7 +99,11 @@ void Ssd1309::print(uint8_t x, uint8_t y, String str) {
 	uint8_t c=0,i,d, pattern;
 	while (str[c] != '\0') {
 		for (i=0;i<6;i++) {
+			#ifdef SSD_1309_FLASH_FONT
+			pattern = pgm_read_byte(&(font[str[c] - 32][i]));
+			#else
 			pattern = font[str[c] - 32][i];
+			#endif
 			for (d = 0; d<8;d++) {
 				if (pattern & (1<<d)) {
 					pixel(x+c*6+i,y+d);

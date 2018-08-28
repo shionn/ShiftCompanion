@@ -3,6 +3,13 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+
+#define SSD_1309_FLASH_FONT
+
+#ifdef SSD_1309_FLASH_FONT
+#include <avr/pgmspace.h>
+#endif
+
 #include "fonts.h"
 
 class Ssd1309 {
