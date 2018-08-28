@@ -49,11 +49,9 @@ void Ssd1309::clearBuffer() {
 	}
 }
 
-//#define __REVERSE__
-
 void Ssd1309::pixel(uint8_t x, uint8_t y) {
 	if (x>128 || y>64) return;
-	#ifdef __REVERSE__
+	#ifdef SSD_1309_REVERSE
 		buffer[(8-y/8)*128-x-1] |= 1<<(7-y%8);
 	#else
 		buffer[(y/8)*128+x] |= 1<<(y%8);
