@@ -65,7 +65,7 @@ void Ssd1309::line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
 		}
 	} else {
 		for (uint8_t y = y1;y<=y2;y++) {
-			pixel(x1+(x2-x1)*(y-y1+1)/(y2-y1),y);
+			pixel(x1+(x2-x1)*(y-y1)/(y2-y1),y);
 		}
 	}
 }
