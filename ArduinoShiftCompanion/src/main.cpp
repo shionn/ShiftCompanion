@@ -17,7 +17,7 @@ void setup() {
 	display.init();
 	lights.init();
 	Serial.begin(9600);
-	timer.every(20, update);
+	timer.every(50, update);
 }
 
 void loop() {
@@ -47,7 +47,11 @@ void serialEvent() {
 			case 0xC4 : setTime(hour(), c,        second(), day(), month(), year()); cmd = 0xC5; break;
 			case 0xC5 : setTime(hour(), minute(), c,        day(), month(), year()); cmd = 0x00; break;
 
-			case 0xFF : lights.mode = c; cmd = 0x00; break;
+			case 0xD0 : lights.mode = c; cmd = 0xD1; break;
+			case 0xD1 : lights.r    = c; cmd = 0xD2; break;
+			case 0xD2 : lights.g    = c; cmd = 0xD3; break;
+			case 0xD3 : lights.b    = c; cmd = 0x00; break;
+
 			case 0x00 : cmd = c;    break;
 			default   : cmd = 0x00; break;
 		}

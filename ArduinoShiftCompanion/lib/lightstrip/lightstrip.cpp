@@ -7,8 +7,9 @@ void LightStrip::init() {
 
 void LightStrip::draw() {
 	switch (mode) {
-		case STRIP_MODE_RAINDOW : rainbow(); break;
-		case STRIP_MODE_THEATRE : theatre(); break;
+		case STRIP_MODE_RAINDOW  : rainbow();  break;
+		case STRIP_MODE_THEATRE  : theatre();  break;
+		case STRIP_MODE_CHENILLE : chenille(); break;
 	}
 	strip.show();
 }
@@ -22,6 +23,13 @@ void LightStrip::rainbow() {
 void LightStrip::theatre() {
 	for(uint8_t i=0; i<STRIP_LEN; i++) {
 		strip.setPixelColor(i, wheel(state));
+	}
+}
+
+void LightStrip::chenille() {
+	for(uint8_t i=0; i<STRIP_LEN; i++) {
+		uint8_t d = (state + STRIP_LEN - i) % 16;
+		strip.setPixelColor(i, r >> d, g >> d, b >> d);
 	}
 }
 
