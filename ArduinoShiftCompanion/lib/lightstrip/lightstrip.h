@@ -16,7 +16,7 @@ class LightStrip {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = STRIP_MODE_CHENILLE;
+		uint8_t mode = STRIP_MODE_RAINDOW;
 		uint8_t state = 0;
 		uint8_t r = 255, g = 255, b = 255;
 

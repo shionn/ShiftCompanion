@@ -28,7 +28,7 @@ void LightStrip::theatre() {
 
 void LightStrip::chenille() {
 	for(uint8_t i=0; i<STRIP_LEN; i++) {
-		uint8_t d = (state + STRIP_LEN - i) % 16;
+		uint8_t d = (state + STRIP_LEN - i) % (STRIP_LEN / 4);
 		strip.setPixelColor(i, r >> d, g >> d, b >> d);
 	}
 }
