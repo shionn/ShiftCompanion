@@ -29,7 +29,7 @@ public class ShiftCompanion {
 				TimeUnit.SECONDS.sleep(5);
 				port.writeBytes(new Commands().time());
 				TimeUnit.SECONDS.sleep(1);
-				port.writeBytes(new Commands().changeMode(0x02));
+				port.writeBytes(new Commands().changeMode(0x01));
 
 				TimeUnit.SECONDS.sleep(10);
 				while (!shutdown) {

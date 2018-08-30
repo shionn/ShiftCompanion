@@ -1,63 +1,29 @@
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
+#include <Timer.h>
 
+#include <lightstrip.h>
 #include <display.h>
-#include <Time.h>
-
-// pin du strip
-#define STRIP_PIN 4
-#define STRIP_LEN 64
-
-#define STRIP_MODE_RAINDOW 0
-#define STRIP_MODE_THEATRE 1
 
 Display display = Display();
+LightStrip lights = LightStrip();
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIP_LEN, STRIP_PIN, NEO_GRB + NEO_KHZ800);
+Timer timer = Timer();
 
-uint32_t Wheel(uint8_t state) {
-	if(state < 85) {
-		return strip.Color(255 - state * 3, 0, state * 3);
-	}
-	if(state < 170) {
-		state -= 85;
-		return strip.Color(0, state * 3, 255 - state * 3);
-	}
-	state -= 170;
-	return strip.Color(state * 3, 255 - state * 3, 0);
+void update() {
+	lights.state++;
 }
-
-void rainbow(uint8_t state) {
-	for(uint8_t i=0; i<STRIP_LEN; i++) {
-		strip.setPixelColor(i, Wheel(i+state));
-	}
-	strip.show();
-}
-
-void theatre(uint8_t state) {
-	for(uint8_t i=0; i<STRIP_LEN; i++) {
-		strip.setPixelColor(i, Wheel(state));
-	}
-	strip.show();
-}
-
-uint8_t stripStep = 0;
 
 void setup() {
 	display.init();
-	strip.begin();
-	strip.show();
+	lights.init();
 	Serial.begin(9600);
+	timer.every(20, update);
 }
 
-uint8_t stripMode = STRIP_MODE_RAINDOW;
-
 void loop() {
-	switch (stripMode) {
-		case STRIP_MODE_RAINDOW : rainbow(stripStep++); break;
-		case STRIP_MODE_THEATRE : theatre(stripStep++); break;
-	}
+	lights.draw();
 	display.draw();
+	timer.update();
 }
 
 uint8_t cmd = 0x00;
@@ -81,7 +47,7 @@ void serialEvent() {
 			case 0xC4 : setTime(hour(), c,        second(), day(), month(), year()); cmd = 0xC5; break;
 			case 0xC5 : setTime(hour(), minute(), c,        day(), month(), year()); cmd = 0x00; break;
 
-			case 0xFF : stripMode = c; cmd = 0x00; break;
+			case 0xFF : lights.mode = c; cmd = 0x00; break;
 			case 0x00 : cmd = c;    break;
 			default   : cmd = 0x00; break;
 		}
