@@ -2,6 +2,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #include <display.h>
+#include <Time.h>
 
 // pin du strip
 #define STRIP_PIN 4
@@ -9,7 +10,6 @@
 
 #define STRIP_MODE_RAINDOW 0
 #define STRIP_MODE_THEATRE 1
-
 
 Display display = Display();
 
@@ -50,17 +50,13 @@ void setup() {
 	Serial.begin(9600);
 }
 
-
-
 uint8_t stripMode = STRIP_MODE_RAINDOW;
-
 
 void loop() {
 	switch (stripMode) {
 		case STRIP_MODE_RAINDOW : rainbow(stripStep++); break;
 		case STRIP_MODE_THEATRE : theatre(stripStep++); break;
 	}
-
 	display.draw();
 }
 
@@ -77,6 +73,13 @@ void serialEvent() {
 			case 0xA4 : display.caseSpeed = c; cmd = 0x00; break;
 
 			case 0xB0 : display.mode      = c; cmd = 0x00; break;
+
+			case 0xC0 : setTime(hour(), minute(), second(), day(), month(), 2000+c); cmd = 0xC1; break;
+			case 0xC1 : setTime(hour(), minute(), second(), day(), c,       year()); cmd = 0xC2; break;
+			case 0xC2 : setTime(hour(), minute(), second(), c,     month(), year()); cmd = 0xC3; break;
+			case 0xC3 : setTime(c,      minute(), second(), day(), month(), year()); cmd = 0xC4; break;
+			case 0xC4 : setTime(hour(), c,        second(), day(), month(), year()); cmd = 0xC5; break;
+			case 0xC5 : setTime(hour(), minute(), c,        day(), month(), year()); cmd = 0x00; break;
 
 			case 0xFF : stripMode = c; cmd = 0x00; break;
 			case 0x00 : cmd = c;    break;

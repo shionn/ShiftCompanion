@@ -3,6 +3,7 @@
 #define __DISPLAY__
 
 #include <ssd1309.h>
+#include <Time.h>
 
 // CS ou SS ou CHIP SELECT : RS
 #define LCD_CS 10
@@ -17,12 +18,14 @@
 
 #define LCD_MODE_LOGO 0
 #define LCD_MODE_SYSTEM 1
+#define LCD_MODE_CLOCK 2
+
 
 class Display {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = LCD_MODE_LOGO;
+		uint8_t mode = LCD_MODE_CLOCK;
 
 		uint8_t cpuTemp   = 0x00;
 		uint8_t moboTemp  = 0x00;
@@ -30,6 +33,7 @@ class Display {
 		uint8_t pumpSpeed = 0x00;
 		uint8_t caseSpeed = 0x00;
 	private :
+		void drawClock();
 		void drawLogo();
 		void drawSysInfo();
 

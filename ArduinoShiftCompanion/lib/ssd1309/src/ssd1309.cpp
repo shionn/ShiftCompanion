@@ -71,14 +71,20 @@ void Ssd1309::line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
 }
 
 void Ssd1309::hline(uint8_t x1, uint8_t x2, uint8_t y) {
-	for (uint8_t x=x1;x<=x2;x++) {
-		pixel(x, y);
+	for (;x1<=x2;x1++) {
+		pixel(x1, y);
 	}
 }
 
 void Ssd1309::vline(uint8_t x, uint8_t y1, uint8_t y2) {
-	for (uint8_t y=y1;y<=y2;y++) {
-		pixel(x, y);
+	for (;y1<=y2;y1++) {
+		pixel(x, y1);
+	}
+}
+
+void Ssd1309::fillbox(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
+	for (;y1<=y2;y1++) {
+		hline(x1, x2, y1);
 	}
 }
 
@@ -105,6 +111,29 @@ void Ssd1309::print(uint8_t x, uint8_t y, String str) {
 			for (d = 0; d<8;d++) {
 				if (pattern & (1<<d)) {
 					pixel(x+c*6+i,y+d);
+				}
+			}
+		}
+		c++;
+	}
+}
+
+void Ssd1309::print(uint8_t x, uint8_t y, String str, uint8_t scale) {
+	uint8_t c=0, i, d, pattern;
+	while (str[c] != '\0') {
+		for (i=0;i<6;i++) {
+			#ifdef SSD_1309_FLASH_FONT
+			pattern = pgm_read_byte(&(font[str[c] - 32][i]));
+			#else
+			pattern = font[str[c] - 32][i];
+			#endif
+			for (d = 0; d<8;d++) {
+				if (pattern & (1<<d)) {
+					fillbox(
+						x + (c*6+i)*scale,
+						y + d*scale,
+						x + (c*6+i+1)*scale - 1,
+						y + d*scale + scale - 1);
 				}
 			}
 		}

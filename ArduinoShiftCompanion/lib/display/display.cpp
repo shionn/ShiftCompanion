@@ -8,6 +8,7 @@ void Display::init() {
 void Display::draw() {
 	lcd.clearBuffer();
 	switch (mode) {
+		case LCD_MODE_CLOCK  : drawClock();   break;
 		case LCD_MODE_LOGO   : drawLogo();    break;
 		case LCD_MODE_SYSTEM : drawSysInfo(); break;
 	}
@@ -31,12 +32,16 @@ void Display::draw() {
 	if (y<=2) dy = 1;
 }
 
-void Display::drawSysInfo() {
-	lcd.print(2,  2,  "Cpu  : " + String(cpuTemp));
-	lcd.print(90, 2,  "("+ String(sysLoad/10.0f)+")");
-	lcd.print(2,  11, "Z97  : " + String(moboTemp));
-	lcd.print(2,  20, "Pump : " + String(pumpSpeed*50));
-	lcd.print(2,  29, "Case : " + String(caseSpeed*50));
+void Display::drawClock() {
+	lcd.print(2, 10,
+		(hour()<10?"0":"")+String(hour())
+		+(second()%2?":":" ")+
+		(minute()<10?"0":"")+String(minute()), 4);
+	lcd.print(22, 52,
+		String(dayShortStr(weekday())) + " " +
+		(day()<10?"0":"")   + String(day())     + "/" +
+		(month()<10?"0":"") + String(month())   + "/" +
+		String(year()));
 }
 
 void Display::drawLogo() {
@@ -81,4 +86,12 @@ void Display::drawLogo() {
 	lcd.vline(71,  7, 25);
 
 	lcd.print(71, 53, "by Shionn");
+}
+
+void Display::drawSysInfo() {
+	lcd.print(2,  2,  "Cpu  : " + String(cpuTemp));
+	lcd.print(90, 2,  "("+ String(sysLoad/10.0f)+")");
+	lcd.print(2,  11, "Z97  : " + String(moboTemp));
+	lcd.print(2,  20, "Pump : " + String(pumpSpeed*50));
+	lcd.print(2,  29, "Case : " + String(caseSpeed*50));
 }
