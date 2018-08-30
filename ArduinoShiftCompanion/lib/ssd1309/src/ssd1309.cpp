@@ -58,6 +58,10 @@ void Ssd1309::pixel(uint8_t x, uint8_t y) {
 	#endif
 }
 
+void Ssd1309::pixel(uint8_t x, uint8_t y, uint8_t scale) {
+	fillbox(x*scale, y*scale, (x+1)*scale-1, (y+1)*scale -1);
+}
+
 void Ssd1309::line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
 	if (x2-x1 > y2-y1) {
 		for (uint8_t x = x1;x<=x2;x++) {
@@ -129,11 +133,7 @@ void Ssd1309::print(uint8_t x, uint8_t y, String str, uint8_t scale) {
 			#endif
 			for (d = 0; d<8;d++) {
 				if (pattern & (1<<d)) {
-					fillbox(
-						x + (c*6+i)*scale,
-						y + d*scale,
-						x + (c*6+i+1)*scale - 1,
-						y + d*scale + scale - 1);
+					pixel(x+c*6+i, y+d, scale);
 				}
 			}
 		}

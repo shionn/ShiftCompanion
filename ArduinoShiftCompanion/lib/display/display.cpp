@@ -33,10 +33,10 @@ void Display::draw() {
 }
 
 void Display::drawClock() {
-	lcd.print(2, 10,
+	lcd.print(6, 4,
 		(hour()<10?"0":"")+String(hour())
 		+(second()%2?":":" ")+
-		(minute()<10?"0":"")+String(minute()), 4);
+		(minute()<10?"0":"")+String(minute()), 3);
 	lcd.print(22, 52,
 		String(dayShortStr(weekday())) + " " +
 		(day()<10?"0":"")   + String(day())     + "/" +

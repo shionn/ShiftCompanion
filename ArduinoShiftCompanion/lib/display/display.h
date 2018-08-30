@@ -25,7 +25,7 @@ class Display {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = LCD_MODE_CLOCK;
+		uint8_t mode = LCD_MODE_LOGO;
 
 		uint8_t cpuTemp   = 0x00;
 		uint8_t moboTemp  = 0x00;
