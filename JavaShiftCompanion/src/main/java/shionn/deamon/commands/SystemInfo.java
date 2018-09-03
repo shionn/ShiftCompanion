@@ -1,34 +1,28 @@
-package shionn;
+package shionn.deamon.commands;
 
 import java.lang.management.ManagementFactory;
-import java.util.Calendar;
 
 import com.profesorfalken.jsensors.JSensors;
 
-public class Commands {
+import shionn.deamon.arduino.ArduinoClient;
+import shionn.deamon.arduino.Commands;
 
-	private static final byte SYS_STATE_CMD = (byte) 0xA0;
-	private static final byte DISPLAY_MODE_CMD = (byte) 0xB0;
-	private static final byte TIME_SET_CMD = (byte) 0xC0;
+public class SystemInfo implements Runnable {
 
-	public byte[] changeMode(int mode) {
-		return new byte[] { DISPLAY_MODE_CMD, (byte) mode };
+	private ArduinoClient client;
+
+	public SystemInfo(ArduinoClient client) {
+		this.client = client;
 	}
 
-	public byte[] time() {
-		Calendar time = Calendar.getInstance();
-		return new byte[] { TIME_SET_CMD, //
-				(byte) (time.get(Calendar.YEAR) % 100), //
-				(byte) (time.get(Calendar.MONTH) + 1), //
-				(byte) time.get(Calendar.DAY_OF_MONTH), //
-				(byte) time.get(Calendar.HOUR_OF_DAY), //
-				(byte) time.get(Calendar.MINUTE), //
-				(byte) time.get(Calendar.SECOND) };
+	@Override
+	public void run() {
+		client.push(systemState());
 	}
 
-	public byte[] systemState() {
+	private byte[] systemState() {
 		return new byte[] { //
-				SYS_STATE_CMD, //
+				Commands.SYS_STATE.cmd(), //
 				temperature("ISA adapter", "Temp Package id 0"), //
 				temperature("ISA adapter", "Temp temp4"), //
 				sysLoad(), //
@@ -57,6 +51,5 @@ public class Commands {
 	private byte sysLoad() {
 		return (byte) (ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage() * 10);
 	}
-
 
 }
