@@ -10,6 +10,7 @@
 #define STRIP_MODE_RAINDOW  0
 #define STRIP_MODE_THEATRE  1
 #define STRIP_MODE_CHENILLE 2
+#define STRIP_MODE_FLASH 3
 
 
 class LightStrip {
@@ -26,6 +27,7 @@ class LightStrip {
 		void rainbow();
 		void theatre();
 		void chenille();
+		void flash();
 
 		uint32_t wheel(uint8_t state);
 };

@@ -1,5 +1,7 @@
 package shionn.deamon.arduino;
 
+import java.util.Arrays;
+
 public enum Commands {
 
 	SYS_STATE((byte) 0xA0), //
@@ -18,6 +20,9 @@ public enum Commands {
 		return cmd;
 	}
 
+	public static byte[] lcdMode(byte mode) {
+		return new byte[] { Commands.DISPLAY_MODE.cmd(), mode };
+	}
 
 	public static byte[] stripRainbow() {
 		return new byte[] { Commands.STRIP_MODE.cmd(), (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
@@ -39,5 +44,12 @@ public enum Commands {
 		return new byte[] { Commands.SYS_STATE.cmd(), cpu, mb, load, fan1, fan2 };
 	}
 
+	public static Commands from(byte[] cmd) {
+		return from(cmd[0]);
+	}
+
+	public static Commands from(byte cmd) {
+		return Arrays.stream(Commands.values()).filter(c -> c.cmd == cmd).findFirst().orElse(null);
+	}
 
 }

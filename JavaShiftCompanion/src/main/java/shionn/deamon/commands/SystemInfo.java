@@ -3,13 +3,14 @@ package shionn.deamon.commands;
 import java.lang.management.ManagementFactory;
 
 import com.profesorfalken.jsensors.JSensors;
+import com.profesorfalken.jsensors.model.components.Components;
 
 import shionn.deamon.arduino.ArduinoClient;
 import shionn.deamon.arduino.Commands;
 
 public class SystemInfo implements Runnable {
 
-	private static final int PUMP_LIMIT = 500;
+	private static final int PUMP_LIMIT = 20;
 	private static final int MB_LIMIT = 55;
 	private static final int CPU_LIMIT = 45;
 	private static final String PUMP_FAN_NAME = "Fan fan1";
@@ -22,27 +23,29 @@ public class SystemInfo implements Runnable {
 
 	@Override
 	public void run() {
-		byte cpu = temperature("ISA adapter", "Temp Package id 0");
-		byte mb = temperature("ISA adapter", "Temp temp4");
-		byte pump = fan("ISA adapter", PUMP_FAN_NAME);
+		Components components = JSensors.get.components();
+
+		byte cpu = temperature(components, "ISA adapter", "Temp Package id 0");
+		byte mb = temperature(components, "ISA adapter", "Temp temp4");
+		byte pump = fan(components, "ISA adapter", PUMP_FAN_NAME);
 		if (cpu > CPU_LIMIT || mb > MB_LIMIT || pump < PUMP_LIMIT) {
 			client.push(Commands.stripFlash((byte) 0xFF, (byte) 0x00, (byte) 0x00));
 		} else {
 			client.push(Commands.stripRainbow());
 		}
-		client.push(systemState(cpu, mb, pump));
+		client.push(systemState(components, cpu, mb, pump));
 	}
 
-	private byte[] systemState(byte cpu, byte mb, byte pump) {
+	private byte[] systemState(Components components, byte cpu, byte mb, byte pump) {
 		return Commands.systemState(cpu, //
 				mb, //
 				sysLoad(), //
 				pump, //
-				fan("ISA adapter", CHASSIS_FAN_NAME));
+				fan(components, "ISA adapter", CHASSIS_FAN_NAME));
 	}
 
-	private byte temperature(String source, String sensor) {
-		return JSensors.get.components().cpus.stream() //
+	private byte temperature(Components components, String source, String sensor) {
+		return components.cpus.stream() //
 				.filter(cpu -> cpu.name.equals(source)) //
 				.flatMap(cpu -> cpu.sensors.temperatures.stream()) //
 				.filter(temp -> temp.name.equals(sensor)) //
@@ -50,8 +53,8 @@ public class SystemInfo implements Runnable {
 				.findFirst().orElse((byte) 0);
 	}
 
-	private byte fan(String source, String sensor) {
-		return JSensors.get.components().cpus.stream() //
+	private byte fan(Components components, String source, String sensor) {
+		return components.cpus.stream() //
 				.filter(cpu -> cpu.name.equals(source)) //
 				.flatMap(cpu -> cpu.sensors.fans.stream()) //
 				.filter(fan -> fan.name.equals(sensor)) //

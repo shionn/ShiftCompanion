@@ -26,24 +26,29 @@ public class ArduinoClient implements Runnable {
 	@Override
 	public void run() {
 		try {
-			if (port.openPort()) {
-				if (!initialized) {
-					port.setParams(SerialPort.BAUDRATE_9600, //
-							SerialPort.DATABITS_8, //
-							SerialPort.STOPBITS_1, //
-							SerialPort.PARITY_NONE);
-					initialized = true;
-				} else {
-					byte[] cmd = commands.poll();
-					if (cmd != null) {
-						port.writeBytes(cmd);
-					}
+			if (!initialized) {
+				port.openPort();
+				logger.info("Init <" + port.getPortName() + ">");
+				port.setParams(SerialPort.BAUDRATE_9600, //
+						SerialPort.DATABITS_8, //
+						SerialPort.STOPBITS_1, //
+						SerialPort.PARITY_NONE);
+				initialized = true;
+			} else {
+				byte[] cmd = commands.poll();
+				if (cmd != null) {
+					logger.info("Send " + Commands.from(cmd));
+					port.writeBytes(cmd);
 				}
-				port.closePort();
 			}
 		} catch (SerialPortException e) {
-			initialized = false;
 			logger.error("Connexion avec l'arduino", e);
+			try {
+				port.closePort();
+				initialized = false;
+			} catch (SerialPortException ex) {
+				logger.error("Fermeture du port", e);
+			}
 		}
 	}
 

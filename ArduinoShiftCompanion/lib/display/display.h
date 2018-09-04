@@ -27,7 +27,7 @@ class Display {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = LCD_MODE_LOGO;
+		uint8_t mode = LCD_MODE_PONG;
 
 		uint8_t cpuTemp   = 0x00;
 		uint8_t moboTemp  = 0x00;
@@ -41,8 +41,8 @@ class Display {
 		void drawPong();
 
 		Ssd1309 lcd = Ssd1309(LCD_CS, LCD_RW, LCD_RS);
-		uint8_t p1y = 32, p2y = 32;
-		uint8_t p1c = 0,  p2c = 0;
+		uint8_t p1y = 32, p2y = 32, p1m = 0;
+		uint8_t p1c = 0,  p2c = 0,  p2m = 0;
 		uint8_t x  = 63;
 		uint8_t y  = 31;
 		int8_t  dx = 1;
