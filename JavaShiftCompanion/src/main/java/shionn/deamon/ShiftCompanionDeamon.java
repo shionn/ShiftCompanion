@@ -32,7 +32,7 @@ public class ShiftCompanionDeamon implements Remote {
 		executor.scheduleAtFixedRate(new LcdChangeMode(client), 1, 5, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new TimeSynchro(client), 2, 180, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new SystemInfo(client), 3, 10, TimeUnit.SECONDS);
-		executor.scheduleAtFixedRate(new NetworkScan(), 5, 10, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(new NetworkScan(client), 5, 10, TimeUnit.SECONDS);
 	}
 
 	public void shutdown() {
