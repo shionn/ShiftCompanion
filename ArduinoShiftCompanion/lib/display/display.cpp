@@ -11,7 +11,6 @@ void Display::draw() {
 		case LCD_MODE_CLOCK  : drawClock();   break;
 		case LCD_MODE_LOGO   : drawLogo();    break;
 		case LCD_MODE_SYSTEM : drawSysInfo(); break;
-		case LCD_MODE_PONG   : drawPong();    break;
 	}
 
 	lcd.hline(0, 127, 0);
@@ -76,72 +75,6 @@ void Display::drawLogo() {
 	lcd.vline(71,  7, 25);
 
 	lcd.print(71, 53, "by Shionn");
-}
-
-void Display::drawPong() {
-	lcd.vline(63, 2, 61);
-	lcd.vline(64, 2, 61);
-	lcd.print(56, 2, String(p1c));
-	lcd.print(65, 2, String(p2c));
-	lcd.fillbox(x-1, y-1, x+1, y+1);
-	lcd.vline(4,   p1y-3, p1y+3);
-	lcd.vline(123, p2y-3, p2y+3);
-
-	if (p1m > 0) {
-		if (!p1c) {
-			lcd.print(20, 28, "Player  1 win");
-		} else {
-			lcd.print(20, 28, "Player  1 point");
-		}
-		p1m--;
-	} else if (p2m > 0){
-		if (!p2c) {
-			lcd.print(20, 28, "Player  2 win");
-		} else {
-			lcd.print(20, 28, "Player  2 point");
-		}
-		p2m--;
-	} else {
-		if (dx < 0 && !(x % 2)) {
-			if (p1y > y) p1y--;
-			if (p1y < y) p1y++;
-		}
-		if (dx > 0 && x % 2) {
-			if (p2y > y) p2y--;
-			if (p2y < y) p2y++;
-		}
-		if (x == 5   && p1y+3 >= y && y >= p1y-3 ) dx = 1;
-		if (x == 122 && p2y+3 >= y && y >= p2y-3 ) dx =-1;
-
-		x+=dx;
-		y+=dy;
-
-		if (x>=126) {
-			dx=-1;
-			if (p1c == 9) {
-				y = p1c + p2c;
-				p1c = 0;
-				p2c = 0;
-				p1m = 200;
-			} else {
-				p1c++;
-				p1m = 50;
-			}
-		} else if (x<=1) {
-			dx = 1;
-			if (p2c == 9) {
-				y = p1c + p2c;
-				p1c = 0;
-				p2c = 0;
-				p2m = 200;
-			} else {
-				p2c++;
-				p2m = 50;
-			}
-		}
-		if (y>=61) dy=-1;
-		else if (y<=2) dy = 1;
-	}
 }
 
 void Display::drawSysInfo() {
