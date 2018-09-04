@@ -16,7 +16,7 @@ public class LcdChangeMode implements Runnable {
 	public void run() {
 		client.push(changeMode(mode));
 		mode++;
-		if (mode >= 4) {
+		if (mode >= 5) {
 			mode = 0;
 		}
 	}

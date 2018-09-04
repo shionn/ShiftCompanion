@@ -20,13 +20,14 @@
 #define LCD_MODE_SYSTEM 1
 #define LCD_MODE_CLOCK 2
 #define LCD_MODE_SERVER 3
+#define LCD_MODE_PONG 4
 
 
 class Display {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = LCD_MODE_SYSTEM;
+		uint8_t mode = LCD_MODE_LOGO;
 
 		uint8_t cpuTemp   = 0x00;
 		uint8_t moboTemp  = 0x00;
@@ -41,6 +42,7 @@ class Display {
 		void drawLogo();
 		void drawSysInfo();
 		void drawServerInfo();
+		void drawPong();
 
 		Ssd1309 lcd = Ssd1309(LCD_CS, LCD_RW, LCD_RS);
 		uint8_t p1y = 32, p2y = 32, p1m = 0;

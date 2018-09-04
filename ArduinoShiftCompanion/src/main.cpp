@@ -52,7 +52,7 @@ void serialEvent() {
 			case 0xC4 : setTime(hour(), c,        second(), day(), month(), year()); cmd = 0xC5; break;
 			case 0xC5 : setTime(hour(), minute(), c,        day(), month(), year()); cmd = 0x00; break;
 
-			case 0xD0 : arg = c;                 cmd = 0xD1; break;
+			case 0xD0 : arg = c;                  cmd = 0xD1; break;
 			case 0xD1 : display.servers[arg] = c; cmd = 0x00; break;
 
 
