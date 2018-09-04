@@ -2,31 +2,35 @@ package shionn.deamon.commands;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
+import shionn.deamon.arduino.ArduinoClient;
+import shionn.deamon.arduino.Commands;
+
 public class NetworkScan implements Runnable {
 	private static final String BASE = "192.168.1.";
+	private static final Map<String, Byte> hosts = new HashMap<>();
 
 	private int ip = 1;
 
-	public void scan() throws IOException {
-		for (int i=1; i<255;i++) {
-			if (InetAddress.getByName(BASE+i).isReachable(100)) {
-				System.out.println(InetAddress.getByName(BASE+i).getHostName());
-			}
-		}
-	}
+	private ArduinoClient client;
 
-	public static void main(String[] args) throws IOException {
-		new NetworkScan().scan();
+	public NetworkScan(ArduinoClient client) {
+		this.client = client;
+		hosts.put("libreelec", (byte) 0x01);
 	}
 
 	@Override
 	public void run() {
 		try {
 			if (InetAddress.getByName(BASE + ip).isReachable(100)) {
-				System.out.println(InetAddress.getByName(BASE + ip).getHostName());
+				String hostName = InetAddress.getByName(BASE + ip).getHostName().toLowerCase();
+				if (hosts.containsKey(hostName)) {
+					client.push(new byte[] { Commands.NETWORK.cmd(), hosts.get(hostName), (byte) ip });
+				}
 			}
 		} catch (IOException e) {
 			LoggerFactory.getLogger(NetworkScan.class).error("Scan <" + BASE + ip + ">", e);

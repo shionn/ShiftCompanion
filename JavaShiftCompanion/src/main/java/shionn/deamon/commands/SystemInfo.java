@@ -9,6 +9,11 @@ import shionn.deamon.arduino.Commands;
 
 public class SystemInfo implements Runnable {
 
+	private static final int PUMP_LIMIT = 500;
+	private static final int MB_LIMIT = 55;
+	private static final int CPU_LIMIT = 45;
+	private static final String PUMP_FAN_NAME = "Fan fan1";
+	private static final String CHASSIS_FAN_NAME = "Fan fan2";
 	private ArduinoClient client;
 
 	public SystemInfo(ArduinoClient client) {
@@ -17,17 +22,23 @@ public class SystemInfo implements Runnable {
 
 	@Override
 	public void run() {
-		client.push(systemState());
+		byte cpu = temperature("ISA adapter", "Temp Package id 0");
+		byte mb = temperature("ISA adapter", "Temp temp4");
+		byte pump = fan("ISA adapter", PUMP_FAN_NAME);
+		if (cpu > CPU_LIMIT || mb > MB_LIMIT || pump < PUMP_LIMIT) {
+			client.push(Commands.stripFlash((byte) 0xFF, (byte) 0x00, (byte) 0x00));
+		} else {
+			client.push(Commands.stripRainbow());
+		}
+		client.push(systemState(cpu, mb, pump));
 	}
 
-	private byte[] systemState() {
-		return new byte[] { //
-				Commands.SYS_STATE.cmd(), //
-				temperature("ISA adapter", "Temp Package id 0"), //
-				temperature("ISA adapter", "Temp temp4"), //
+	private byte[] systemState(byte cpu, byte mb, byte pump) {
+		return Commands.systemState(cpu, //
+				mb, //
 				sysLoad(), //
-				fan("ISA adapter", "Fan fan1"), //
-				fan("ISA adapter", "Fan fan2") };
+				pump, //
+				fan("ISA adapter", CHASSIS_FAN_NAME));
 	}
 
 	private byte temperature(String source, String sensor) {
