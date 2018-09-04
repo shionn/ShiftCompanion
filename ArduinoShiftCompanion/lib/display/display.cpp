@@ -8,9 +8,10 @@ void Display::init() {
 void Display::draw() {
 	lcd.clearBuffer();
 	switch (mode) {
-		case LCD_MODE_CLOCK  : drawClock();   break;
-		case LCD_MODE_LOGO   : drawLogo();    break;
-		case LCD_MODE_SYSTEM : drawSysInfo(); break;
+		case LCD_MODE_CLOCK  : drawClock();      break;
+		case LCD_MODE_LOGO   : drawLogo();       break;
+		case LCD_MODE_SYSTEM : drawSysInfo();    break;
+		case LCD_MODE_SERVER : drawServerInfo(); break;
 	}
 
 	lcd.hline(0, 127, 0);
@@ -74,13 +75,34 @@ void Display::drawLogo() {
 	lcd.vline(70,  7, 25);
 	lcd.vline(71,  7, 25);
 
-	lcd.print(71, 53, "by Shionn");
+	lcd.print(71, 53, F("by Shionn"));
+}
+
+int freeRam () {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
 void Display::drawSysInfo() {
-	lcd.print(2,  2,  "Cpu  : " + String(cpuTemp));
-	lcd.print(90, 2,  "("+ String(sysLoad/10.0f)+")");
-	lcd.print(2,  11, "Z97  : " + String(moboTemp));
-	lcd.print(2,  20, "Pump : " + String(pumpSpeed*50));
-	lcd.print(2,  29, "Case : " + String(caseSpeed*50));
+	lcd.print(2,  2,  F("Cpu  :"));
+	lcd.print(44, 2,  String(cpuTemp));
+	lcd.print(90, 2,  "(" + String(sysLoad/10.0f) + ")");
+	lcd.print(2,  11, F("Z97  :"));
+	lcd.print(44, 11, String(moboTemp));
+	lcd.print(2,  20, F("Pump :"));
+	lcd.print(44, 20, String(pumpSpeed*50));
+	lcd.print(2,  29, F("Case :"));
+	lcd.print(44, 29, String(caseSpeed*50));
+	// todo memory
+	lcd.print(101,54, String(freeRam()) + "o");
+}
+
+void Display::drawServerInfo() {
+	lcd.print(2,    2, F("www.shionn.org"));
+	lcd.print(113,  2, String(servers[0]?"Ok":"Ko"));
+	lcd.print(2,   11, F("maven.shionn.org"));
+	lcd.print(113, 11, String(servers[1]?"Ok":"Ko"));
+	lcd.print(2,   20, F("mtg.shionn.org"));
+	lcd.print(113, 20, String(servers[2]?"Ok":"Ko"));
 }

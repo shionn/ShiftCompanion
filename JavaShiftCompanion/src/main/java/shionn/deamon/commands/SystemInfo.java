@@ -17,6 +17,8 @@ public class SystemInfo implements Runnable {
 	private static final String CHASSIS_FAN_NAME = "Fan fan2";
 	private ArduinoClient client;
 
+	private boolean alert = false;
+
 	public SystemInfo(ArduinoClient client) {
 		this.client = client;
 	}
@@ -28,12 +30,18 @@ public class SystemInfo implements Runnable {
 		byte cpu = temperature(components, "ISA adapter", "Temp Package id 0");
 		byte mb = temperature(components, "ISA adapter", "Temp temp4");
 		byte pump = fan(components, "ISA adapter", PUMP_FAN_NAME);
-		if (cpu > CPU_LIMIT || mb > MB_LIMIT || pump < PUMP_LIMIT) {
+		if (isOverheat(cpu, mb, pump) && !alert) {
+			alert = true;
 			client.push(Commands.stripFlash((byte) 0xFF, (byte) 0x00, (byte) 0x00));
-		} else {
+		} else if (alert) {
+			alert = false;
 			client.push(Commands.stripRainbow());
 		}
 		client.push(systemState(components, cpu, mb, pump));
+	}
+
+	private boolean isOverheat(byte cpu, byte mb, byte pump) {
+		return cpu > CPU_LIMIT || mb > MB_LIMIT || pump < PUMP_LIMIT;
 	}
 
 	private byte[] systemState(Components components, byte cpu, byte mb, byte pump) {

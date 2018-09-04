@@ -8,7 +8,8 @@ public enum Commands {
 	DISPLAY_MODE((byte) 0xB0), //
 	STRIP_MODE((byte) 0xB1), //
 	TIME_SET((byte) 0xC0), //
-	NETWORK((byte) 0xD0);
+	SERVER_STATUS((byte) 0xD0), //
+	NETWORK((byte) 0xE0);
 
 	private byte cmd;
 
@@ -44,6 +45,13 @@ public enum Commands {
 		return new byte[] { Commands.SYS_STATE.cmd(), cpu, mb, load, fan1, fan2 };
 	}
 
+	public static byte[] serverStatus(byte server, boolean available) {
+		return new byte[] {
+				Commands.SERVER_STATUS.cmd(),
+				server,
+				(byte) (available ? 0x01 : 0x00) };
+	}
+
 	public static Commands from(byte[] cmd) {
 		return from(cmd[0]);
 	}
@@ -51,5 +59,6 @@ public enum Commands {
 	public static Commands from(byte cmd) {
 		return Arrays.stream(Commands.values()).filter(c -> c.cmd == cmd).findFirst().orElse(null);
 	}
+
 
 }

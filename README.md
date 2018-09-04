@@ -14,7 +14,7 @@ Projet d'ajout d'un ecran OLED de 128*64 à l'interieur de mon pc "shift".
 
 ## oled :
 - Un logo SHIFT reprenant le design de la marque
-- état du system (température et vitesse ventillo)
+- état du system (température et vitesse ventillo) TODO ajouter mémoire
 - TODO Liste des IP/Hostname du réseau
 - heure / date
 - Un pseudo pong, (la fonction random fini par faire planter l'arduino)

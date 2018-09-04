@@ -19,24 +19,28 @@
 #define LCD_MODE_LOGO 0
 #define LCD_MODE_SYSTEM 1
 #define LCD_MODE_CLOCK 2
-#define LCD_MODE_NETWORK 3
+#define LCD_MODE_SERVER 3
 
 
 class Display {
 	public :
 		void init();
 		void draw();
-		uint8_t mode = LCD_MODE_LOGO;
+		uint8_t mode = LCD_MODE_SYSTEM;
 
 		uint8_t cpuTemp   = 0x00;
 		uint8_t moboTemp  = 0x00;
 		uint8_t sysLoad   = 0x00;
 		uint8_t pumpSpeed = 0x00;
 		uint8_t caseSpeed = 0x00;
+
+		bool servers[3] = { false, false, false };
+
 	private :
 		void drawClock();
 		void drawLogo();
 		void drawSysInfo();
+		void drawServerInfo();
 
 		Ssd1309 lcd = Ssd1309(LCD_CS, LCD_RW, LCD_RS);
 		uint8_t p1y = 32, p2y = 32, p1m = 0;
