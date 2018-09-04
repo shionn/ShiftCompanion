@@ -11,11 +11,8 @@ void Display::draw() {
 		case LCD_MODE_CLOCK  : drawClock();   break;
 		case LCD_MODE_LOGO   : drawLogo();    break;
 		case LCD_MODE_SYSTEM : drawSysInfo(); break;
+		case LCD_MODE_PONG   : drawPong();    break;
 	}
-
-	lcd.hline(x-1,x+1, y-1);
-	lcd.hline(x-1,x+1, y);
-	lcd.hline(x-1,x+1, y+1);
 
 	lcd.hline(0, 127, 0);
 	lcd.hline(0, 127, 63);
@@ -23,13 +20,6 @@ void Display::draw() {
 	lcd.vline(127, 0, 63);
 
 	lcd.display();
-
-	x+=dx;
-	y+=dy;
-	if (x>=125) dx=-1;
-	if (x<=2) dx=1;
-	if (y>=61) dy=-1;
-	if (y<=2) dy = 1;
 }
 
 void Display::drawClock() {
@@ -86,6 +76,38 @@ void Display::drawLogo() {
 	lcd.vline(71,  7, 25);
 
 	lcd.print(71, 53, "by Shionn");
+}
+
+void Display::drawPong() {
+	lcd.vline(63, 2, 61);
+	lcd.vline(64, 2, 61);
+	lcd.print(56, 2, String(p1c));
+	lcd.print(65, 2, String(p2c));
+	lcd.fillbox(x-1, y-1, x+1, y+1);
+
+
+	lcd.vline(5,   p1y-3, p1y+3);
+	lcd.vline(122, p2y-3, p2y+3);
+
+	if (dx < 0 && x % 2) {
+		if (p1y > y) p1y--;
+		if (p1y < y) p1y++;
+	}
+	if (dx > 0 && x % 2) {
+		if (p2y > y) p2y--;
+		if (p2y < y) p2y++;
+	}
+	if (x == 5   && p1y+3 >= y && y >= p1y-3 ) dx = 1;
+	if (x == 122 && p2y+3 >= y && y >= p2y-3 ) dx =-1;
+
+
+	x+=dx;
+	y+=dy;
+	if (x>=127) {dx=-1; p1c++;}
+	if (x<=0) {dx=1; p2c++;}
+	if (y>=61) dy=-1;
+	if (y<=2) dy = 1;
+
 }
 
 void Display::drawSysInfo() {
