@@ -97,7 +97,6 @@ void Display::drawSysInfo() {
 	lcd.print(44, 29, String(caseSpeed*50));
 	lcd.print(2,  38, F("Mem  :"));
 	lcd.print(44, 38, String(memory/10.0f,1)+String(F("/16 Go")));
-	// todo memory
 	lcd.print(101,54, String(freeRam()) + "o");
 }
 
