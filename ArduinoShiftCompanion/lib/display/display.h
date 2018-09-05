@@ -34,6 +34,7 @@ class Display {
 		uint8_t sysLoad   = 0x00;
 		uint8_t pumpSpeed = 0x00;
 		uint8_t caseSpeed = 0x00;
+		uint8_t memory    = 0x00;
 	private :
 		void drawClock();
 		void drawLogo();
