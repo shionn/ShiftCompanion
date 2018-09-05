@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 import shionn.deamon.arduino.ArduinoClient;
-import shionn.deamon.arduino.Commands;
 
 public class NetworkScan implements Runnable {
 	private static final String BASE = "192.168.1.";
@@ -32,7 +31,7 @@ public class NetworkScan implements Runnable {
 			if (InetAddress.getByName(host).isReachable(100)) {
 				String hostName = InetAddress.getByName(host).getHostName().toLowerCase();
 				if (hosts.containsKey(hostName)) {
-					client.push(new byte[] { Commands.NETWORK.cmd(), hosts.get(hostName), (byte) ip });
+					client.push(null);
 				}
 			}
 		} catch (IOException e) {

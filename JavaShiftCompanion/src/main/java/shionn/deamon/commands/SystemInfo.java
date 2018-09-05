@@ -2,6 +2,8 @@ package shionn.deamon.commands;
 
 import java.lang.management.ManagementFactory;
 
+import org.jutils.jhardware.HardwareInfo;
+
 import com.profesorfalken.jsensors.JSensors;
 import com.profesorfalken.jsensors.model.components.Components;
 
@@ -10,6 +12,7 @@ import shionn.deamon.arduino.Commands;
 
 public class SystemInfo implements Runnable {
 
+	private static final int MEMORY_FACTOR = 10; // adapté à 16Go
 	private static final int PUMP_LIMIT = 20;
 	private static final int MB_LIMIT = 55;
 	private static final int CPU_LIMIT = 45;
@@ -37,19 +40,21 @@ public class SystemInfo implements Runnable {
 			alert = false;
 			client.push(Commands.stripRainbow());
 		}
-		client.push(systemState(components, cpu, mb, pump));
+		client.push(Commands.systemState(cpu, //
+				mb, //
+				sysLoad(), //
+				pump, //
+				fan(components, "ISA adapter", CHASSIS_FAN_NAME), //
+				memory()));
+	}
+
+	private byte memory() {
+		return (byte) (Double.parseDouble(HardwareInfo.getMemoryInfo().getAvailableMemory()) * MEMORY_FACTOR / 1024
+				/ 1024);
 	}
 
 	private boolean isOverheat(byte cpu, byte mb, byte pump) {
 		return cpu > CPU_LIMIT || mb > MB_LIMIT || pump < PUMP_LIMIT;
-	}
-
-	private byte[] systemState(Components components, byte cpu, byte mb, byte pump) {
-		return Commands.systemState(cpu, //
-				mb, //
-				sysLoad(), //
-				pump, //
-				fan(components, "ISA adapter", CHASSIS_FAN_NAME));
 	}
 
 	private byte temperature(Components components, String source, String sensor) {

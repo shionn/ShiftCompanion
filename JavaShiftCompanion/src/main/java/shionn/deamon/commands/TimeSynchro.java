@@ -15,19 +15,7 @@ public class TimeSynchro implements Runnable {
 
 	@Override
 	public void run() {
-		client.push(time());
-
-	}
-
-	public byte[] time() {
-		Calendar time = Calendar.getInstance();
-		return new byte[] { Commands.TIME_SET.cmd(), //
-				(byte) (time.get(Calendar.YEAR) % 100), //
-				(byte) (time.get(Calendar.MONTH) + 1), //
-				(byte) time.get(Calendar.DAY_OF_MONTH), //
-				(byte) time.get(Calendar.HOUR_OF_DAY), //
-				(byte) time.get(Calendar.MINUTE), //
-				(byte) time.get(Calendar.SECOND) };
+		this.client.push(Commands.time(Calendar.getInstance()));
 	}
 
 }
