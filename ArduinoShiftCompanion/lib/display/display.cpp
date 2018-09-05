@@ -8,10 +8,11 @@ void Display::init() {
 void Display::draw() {
 	lcd.clearBuffer();
 	switch (mode) {
-		case LCD_MODE_CLOCK  : drawClock();   break;
-		case LCD_MODE_LOGO   : drawLogo();    break;
-		case LCD_MODE_SYSTEM : drawSysInfo(); break;
-		case LCD_MODE_PONG   : drawPong();    break;
+		case LCD_MODE_CLOCK  : drawClock();      break;
+		case LCD_MODE_LOGO   : drawLogo();       break;
+		case LCD_MODE_SYSTEM : drawSysInfo();    break;
+		case LCD_MODE_SERVER : drawServerInfo(); break;
+		case LCD_MODE_PONG   : drawPong();       break;
 	}
 
 	lcd.hline(0, 127, 0);
@@ -75,7 +76,36 @@ void Display::drawLogo() {
 	lcd.vline(70,  7, 25);
 	lcd.vline(71,  7, 25);
 
-	lcd.print(71, 53, "by Shionn");
+	lcd.print(71, 53, F("by Shionn"));
+}
+
+int freeRam () {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+void Display::drawSysInfo() {
+	lcd.print(2,  2,  F("Cpu  :"));
+	lcd.print(44, 2,  String(cpuTemp));
+	lcd.print(90, 2,  "(" + String(sysLoad/10.0f) + ")");
+	lcd.print(2,  11, F("Z97  :"));
+	lcd.print(44, 11, String(moboTemp));
+	lcd.print(2,  20, F("Pump :"));
+	lcd.print(44, 20, String(pumpSpeed*50));
+	lcd.print(2,  29, F("Case :"));
+	lcd.print(44, 29, String(caseSpeed*50));
+	// todo memory
+	lcd.print(101,54, String(freeRam()) + "o");
+}
+
+void Display::drawServerInfo() {
+	lcd.print(2,    2, F("www.shionn.org"));
+	lcd.print(113,  2, String(servers[0]?"Ok":"Ko"));
+	lcd.print(2,   11, F("maven.shionn.org"));
+	lcd.print(113, 11, String(servers[1]?"Ok":"Ko"));
+	lcd.print(2,   20, F("mtg.shionn.org"));
+	lcd.print(113, 20, String(servers[2]?"Ok":"Ko"));
 }
 
 void Display::drawPong() {
@@ -84,36 +114,62 @@ void Display::drawPong() {
 	lcd.print(56, 2, String(p1c));
 	lcd.print(65, 2, String(p2c));
 	lcd.fillbox(x-1, y-1, x+1, y+1);
+	lcd.vline(4,   p1y-3, p1y+3);
+	lcd.vline(123, p2y-3, p2y+3);
 
+	if (p1m > 0) {
+		if (!p1c) {
+			lcd.print(20, 28, F("Player  1 win"));
+		} else {
+			lcd.print(20, 28, F("Player  1 point"));
+		}
+		p1m--;
+	} else if (p2m > 0){
+		if (!p2c) {
+			lcd.print(20, 28, F("Player  2 win"));
+		} else {
+			lcd.print(20, 28, F("Player  2 point"));
+		}
+		p2m--;
+	} else {
+		if (dx < 0 && !(x % 2)) {
+			if (p1y > y) p1y--;
+			if (p1y < y) p1y++;
+		}
+		if (dx > 0 && x % 2) {
+			if (p2y > y) p2y--;
+			if (p2y < y) p2y++;
+		}
+		if (x == 5   && p1y+3 >= y && y >= p1y-3 ) dx = 1;
+		if (x == 122 && p2y+3 >= y && y >= p2y-3 ) dx =-1;
 
-	lcd.vline(5,   p1y-3, p1y+3);
-	lcd.vline(122, p2y-3, p2y+3);
+		x+=dx;
+		y+=dy;
 
-	if (dx < 0 && x % 2) {
-		if (p1y > y) p1y--;
-		if (p1y < y) p1y++;
+		if (x>=126) {
+			dx=-1;
+			if (p1c == 9) {
+				y = p1c + p2c;
+				p1c = 0;
+				p2c = 0;
+				p1m = 200;
+			} else {
+				p1c++;
+				p1m = 50;
+			}
+		} else if (x<=1) {
+			dx = 1;
+			if (p2c == 9) {
+				y = p1c + p2c;
+				p1c = 0;
+				p2c = 0;
+				p2m = 200;
+			} else {
+				p2c++;
+				p2m = 50;
+			}
+		}
+		if (y>=61) dy=-1;
+		else if (y<=2) dy = 1;
 	}
-	if (dx > 0 && x % 2) {
-		if (p2y > y) p2y--;
-		if (p2y < y) p2y++;
-	}
-	if (x == 5   && p1y+3 >= y && y >= p1y-3 ) dx = 1;
-	if (x == 122 && p2y+3 >= y && y >= p2y-3 ) dx =-1;
-
-
-	x+=dx;
-	y+=dy;
-	if (x>=127) {dx=-1; p1c++;}
-	if (x<=0) {dx=1; p2c++;}
-	if (y>=61) dy=-1;
-	if (y<=2) dy = 1;
-
-}
-
-void Display::drawSysInfo() {
-	lcd.print(2,  2,  "Cpu  : " + String(cpuTemp));
-	lcd.print(90, 2,  "("+ String(sysLoad/10.0f)+")");
-	lcd.print(2,  11, "Z97  : " + String(moboTemp));
-	lcd.print(2,  20, "Pump : " + String(pumpSpeed*50));
-	lcd.print(2,  29, "Case : " + String(caseSpeed*50));
 }

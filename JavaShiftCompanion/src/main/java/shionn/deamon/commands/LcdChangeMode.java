@@ -6,7 +6,7 @@ import shionn.deamon.arduino.Commands;
 public class LcdChangeMode implements Runnable {
 
 	private ArduinoClient client;
-	private int mode = 0;
+	private byte mode = 0;
 
 	public LcdChangeMode(ArduinoClient client) {
 		this.client = client;
@@ -16,13 +16,13 @@ public class LcdChangeMode implements Runnable {
 	public void run() {
 		client.push(changeMode(mode));
 		mode++;
-		if (mode == 3) {
+		if (mode >= 5) {
 			mode = 0;
 		}
 	}
 
-	private byte[] changeMode(int mode) {
-		return new byte[] { Commands.DISPLAY_MODE.cmd(), (byte) mode };
+	private byte[] changeMode(byte mode) {
+		return Commands.lcdMode(mode);
 	}
 
 }
