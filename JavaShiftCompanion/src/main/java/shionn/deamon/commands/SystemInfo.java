@@ -33,13 +33,13 @@ public class SystemInfo implements Runnable {
 		byte cpu = temperature(components, "ISA adapter", "Temp Package id 0");
 		byte mb = temperature(components, "ISA adapter", "Temp temp4");
 		byte pump = fan(components, "ISA adapter", PUMP_FAN_NAME);
-		if (isOverheat(cpu, mb, pump) && !alert) {
-			alert = true;
-			client.push(Commands.stripFlash((byte) 0xFF, (byte) 0x00, (byte) 0x00));
-		} else if (alert) {
-			alert = false;
-			client.push(Commands.stripRainbow());
-		}
+		//		if (isOverheat(cpu, mb, pump) && !alert) {
+		//			alert = true;
+		//			client.push(Commands.stripFlash((byte) 0xFF, (byte) 0x00, (byte) 0x00));
+		//		} else if (alert) {
+		//			alert = false;
+		//			client.push(Commands.stripRainbow());
+		//		}
 		client.push(Commands.systemState(cpu, //
 				mb, //
 				sysLoad(), //
@@ -49,8 +49,9 @@ public class SystemInfo implements Runnable {
 	}
 
 	private byte memory() {
-		return (byte) (Double.parseDouble(HardwareInfo.getMemoryInfo().getAvailableMemory()) * MEMORY_FACTOR / 1024
-				/ 1024);
+		return (byte) (Double.parseDouble(
+				HardwareInfo.getMemoryInfo().getAvailableMemory().replaceAll("[^0-9]", ""))
+				* MEMORY_FACTOR / 1024 / 1024);
 	}
 
 	private boolean isOverheat(byte cpu, byte mb, byte pump) {

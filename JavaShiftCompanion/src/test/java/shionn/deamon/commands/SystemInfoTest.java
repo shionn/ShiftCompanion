@@ -9,6 +9,9 @@ public class SystemInfoTest {
 	@Test
 	public void testJHardware() {
 		MemoryInfo memoryInfo = HardwareInfo.getMemoryInfo();
-		System.out.println(Double.parseDouble(memoryInfo.getAvailableMemory()) / 1024 / 1024);
+		double x = Double.parseDouble(memoryInfo.getAvailableMemory().replaceAll("[^0-9]", ""))
+				/ 1024;
+		System.out.println(x / 1024);
+		System.out.println((byte) (x * 10 / 1024));
 	}
 }

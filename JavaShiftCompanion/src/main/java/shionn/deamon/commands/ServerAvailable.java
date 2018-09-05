@@ -19,7 +19,8 @@ public class ServerAvailable implements Runnable {
 
 	public ServerAvailable(ArduinoClient client) {
 		this.client = client;
-		this.servers = new String[] { "http://www.shionn.org", "http://maven.shionn.org" };
+		this.servers = new String[] { "http://www.shionn.org", "http://maven.shionn.org",
+				"http://mtg.shionn.org" };
 	}
 
 	@Override

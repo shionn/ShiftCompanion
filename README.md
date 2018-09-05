@@ -18,5 +18,5 @@ Projet d'ajout d'un ecran OLED de 128*64 à l'interieur de mon pc "shift".
 - TODO Liste des IP/Hostname du réseau
 - heure / date
 - Un pseudo pong, (la fonction random fini par faire planter l'arduino)
-- TODO : Etat de certain site web (shionn.org / maven)
+- Etat de certain site web (shionn.org / maven)
 - TODO : Alert d'un email ?

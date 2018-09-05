@@ -37,7 +37,8 @@ void serialEvent() {
 			case 0xA1 : display.moboTemp  = c; cmd = 0xA2; break;
 			case 0xA2 : display.sysLoad   = c; cmd = 0xA3; break;
 			case 0xA3 : display.pumpSpeed = c; cmd = 0xA4; break;
-			case 0xA4 : display.caseSpeed = c; cmd = 0x00; break;
+			case 0xA4 : display.caseSpeed = c; cmd = 0xA5; break;
+			case 0xA5 : display.memory    = c; cmd = 0x00; break;
 
 			case 0xB0 : display.mode = c; cmd = 0x00; break;
 			case 0xB1 : lights.mode  = c; cmd = 0xB2; break;
