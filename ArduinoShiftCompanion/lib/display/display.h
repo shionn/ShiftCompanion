@@ -29,12 +29,14 @@ class Display {
 		void draw();
 		uint8_t mode = LCD_MODE_LOGO;
 
-		uint8_t cpuTemp   = 0x00;
-		uint8_t moboTemp  = 0x00;
-		uint8_t sysLoad   = 0x00;
-		uint8_t pumpSpeed = 0x00;
-		uint8_t caseSpeed = 0x00;
-		uint8_t memory    = 0x00;
+		uint8_t cpuTemp    = 0x00;
+		uint8_t moboTemp   = 0x00;
+		uint8_t sysLoad    = 0x00;
+		uint8_t pumpSpeed  = 0x00;
+		uint8_t caseSpeed  = 0x00;
+		uint8_t memory     = 0x00;
+		uint8_t unreadMail = 0x00;
+		uint8_t totalMail  = 0x00;
 
 		bool servers[3] = { false, false, false };
 

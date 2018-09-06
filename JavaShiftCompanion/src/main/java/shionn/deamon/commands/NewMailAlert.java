@@ -21,6 +21,8 @@ public class NewMailAlert implements Runnable {
 	private Properties configuration;
 	private int last = 0;
 
+	private boolean alert;
+
 	public NewMailAlert(ArduinoClient client) throws IOException {
 		this.client = client;
 		configuration = new Properties();
@@ -39,15 +41,16 @@ public class NewMailAlert implements Runnable {
 					configuration.getProperty("mail.pass"));
 			Folder folder = store.getFolder("INBOX");
 			folder.open(Folder.READ_ONLY);
-			int count = folder.getUnreadMessageCount();
-			logger.info("Nb mail : " + count + " : " + folder.getFullName() + " : "
-					+ folder.getName() + " : " + folder.getMessageCount());
-			if (count > last && last != 0) {
+			int unread = folder.getUnreadMessageCount();
+			if (unread > last && !alert) {
+				alert = true;
 				client.push(Commands.stripFlash((byte) 0, (byte) 0, (byte) 255));
-			} else {
+			} else if (alert) {
 				client.push(Commands.stripRainbow());
+				alert = false;
 			}
-			last = count;
+			client.push(Commands.mailStatus((byte) unread, (byte) folder.getMessageCount()));
+			last = unread;
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

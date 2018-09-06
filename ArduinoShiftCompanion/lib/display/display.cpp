@@ -107,6 +107,9 @@ void Display::drawServerInfo() {
 	lcd.print(113, 11, String(servers[1]?"Ok":"Ko"));
 	lcd.print(2,   20, F("mtg.shionn.org"));
 	lcd.print(113, 20, String(servers[2]?"Ok":"Ko"));
+
+	lcd.print(2,   53, F("Mail :"));
+	lcd.print(44,  53, String(unreadMail)+"/"+String(totalMail));
 }
 
 void Display::drawPong() {

@@ -9,7 +9,8 @@ public enum Commands {
 	DISPLAY_MODE((byte) 0xB0), //
 	STRIP_MODE((byte) 0xB1), //
 	TIME_SET((byte) 0xC0), //
-	SERVER_STATUS((byte) 0xD0);
+	SERVER_STATUS((byte) 0xD0), //
+	MAIL_STATUS((byte) 0xD5);
 
 	private byte cmd;
 
@@ -58,6 +59,10 @@ public enum Commands {
 				(byte) time.get(Calendar.SECOND) };
 	}
 
+	public static byte[] mailStatus(byte unread, byte messageCount) {
+		return new byte[] { Commands.MAIL_STATUS.cmd, unread, messageCount };
+	}
+
 	public static Commands from(byte[] cmd) {
 		return from(cmd[0]);
 	}
@@ -65,7 +70,5 @@ public enum Commands {
 	public static Commands from(byte cmd) {
 		return Arrays.stream(Commands.values()).filter(c -> c.cmd == cmd).findFirst().orElse(null);
 	}
-
-
 
 }

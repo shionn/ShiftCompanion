@@ -14,8 +14,8 @@ public class SystemInfo implements Runnable {
 
 	private static final int MEMORY_FACTOR = 10; // adapté à 16Go
 	private static final int PUMP_LIMIT = 20;
-	private static final int MB_LIMIT = 55;
-	private static final int CPU_LIMIT = 45;
+	private static final int MB_LIMIT = 60;
+	private static final int CPU_LIMIT = 50;
 	private static final String PUMP_FAN_NAME = "Fan fan1";
 	private static final String CHASSIS_FAN_NAME = "Fan fan2";
 	private ArduinoClient client;

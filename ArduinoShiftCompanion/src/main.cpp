@@ -55,7 +55,8 @@ void serialEvent() {
 
 			case 0xD0 : arg = c;                  cmd = 0xD1; break;
 			case 0xD1 : display.servers[arg] = c; cmd = 0x00; break;
-
+			case 0xD5 : display.unreadMail   = c; cmd = 0xD6; break;
+			case 0xD6 : display.totalMail    = c; cmd = 0x00; break;
 
 
 			case 0x00 : cmd = c;    break;
