@@ -34,7 +34,7 @@ public class ShiftCompanionDeamon implements Remote {
 		executor.scheduleAtFixedRate(new TimeSynchro(client), 2, 180, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new SystemInfo(client), 3, 15, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new ServerAvailable(client), 4, 60, TimeUnit.SECONDS);
-		executor.scheduleAtFixedRate(new NewMailAlert(client), 5, 60, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(new NewMailAlert(client), 5, 30, TimeUnit.SECONDS);
 		// executor.scheduleAtFixedRate(new NetworkScan(client), 4, 60, TimeUnit.SECONDS);
 	}
 
