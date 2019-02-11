@@ -13,7 +13,7 @@ import shionn.deamon.arduino.Commands;
 public class SystemInfo implements Runnable {
 
 	private static final int MEMORY_FACTOR = 10; // adapté à 16Go
-	private static final int PUMP_LIMIT = 20;
+	private static final int PUMP_LIMIT = 10;
 	private static final int MB_LIMIT = 60;
 	private static final int CPU_LIMIT = 50;
 	private static final String PUMP_FAN_NAME = "Fan fan1";
