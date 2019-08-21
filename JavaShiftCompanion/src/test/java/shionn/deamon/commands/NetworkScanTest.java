@@ -6,8 +6,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class NetworkScanTest {
 
 	@Test
