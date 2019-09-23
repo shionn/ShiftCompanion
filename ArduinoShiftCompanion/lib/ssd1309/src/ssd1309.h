@@ -5,13 +5,12 @@
 #include <SPI.h>
 
 #define SSD_1309_FLASH_FONT
+#define SSD_1309_REVERSE
+
 #ifdef SSD_1309_FLASH_FONT
 #include <avr/pgmspace.h>
 #endif
 #include "fonts.h"
-
-//#define SSD_1309_REVERSE
-
 
 class Ssd1309 {
 	public :
