@@ -62,8 +62,9 @@ void serialEvent() {
 			case 0xD5 : display.unreadMail   = c; cmd = 0xD6; break;
 			case 0xD6 : display.totalMail    = c; cmd = 0x00; break;
 
-			case 0xE0 : fans.setSpeed1(c); cmd = 0xE1; break;
-			case 0xE1 : fans.setSpeed2(c); cmd = 0x00; break;
+			case 0xE0 : fans.setSpeed(0,c); cmd = 0xE1; break;
+			case 0xE1 : fans.setSpeed(1,c); cmd = 0xE2; break;
+			case 0xE2 : fans.setSpeed(2,c); cmd = 0x00; break;
 
 
 			case 0x00 : cmd = c;    break;

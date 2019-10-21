@@ -10,7 +10,9 @@ public enum Commands {
 	STRIP_MODE((byte) 0xB1), //
 	TIME_SET((byte) 0xC0), //
 	SERVER_STATUS((byte) 0xD0), //
-	MAIL_STATUS((byte) 0xD5);
+	MAIL_STATUS((byte) 0xD5), //
+	FAN_SPEED((byte) 0xE0);
+	;
 
 	private byte cmd;
 
@@ -69,6 +71,10 @@ public enum Commands {
 
 	public static Commands from(byte cmd) {
 		return Arrays.stream(Commands.values()).filter(c -> c.cmd == cmd).findFirst().orElse(null);
+	}
+
+	public static byte[] fanSpeed(byte fan1, byte fan2, byte fan3) {
+		return new byte[] { Commands.FAN_SPEED.cmd, fan1, fan2, fan3 };
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import shionn.deamon.arduino.ArduinoClient;
+import shionn.deamon.commands.FanSpeed;
 import shionn.deamon.commands.LcdChangeMode;
 import shionn.deamon.commands.NewMailAlert;
 import shionn.deamon.commands.ServerAvailable;
@@ -35,6 +36,7 @@ public class ShiftCompanionDeamon implements Remote {
 		executor.scheduleAtFixedRate(new SystemInfo(client), 3, 15, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new ServerAvailable(client), 4, 60, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(new NewMailAlert(client), 5, 30, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(new FanSpeed(client), 6, 60, TimeUnit.SECONDS);
 		// executor.scheduleAtFixedRate(new NetworkScan(client), 4, 60, TimeUnit.SECONDS);
 	}
 
