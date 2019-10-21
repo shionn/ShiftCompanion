@@ -3,9 +3,11 @@
 
 #include <lightstrip.h>
 #include <display.h>
+#include <fans.h>
 
 Display display = Display();
 LightStrip lights = LightStrip();
+Fans fans = Fans();
 
 Timer timer = Timer();
 
@@ -16,6 +18,7 @@ void update() {
 void setup() {
 	display.init();
 	lights.init();
+	fans.init();
 	Serial.begin(9600);
 	timer.every(50, update);
 }
@@ -24,6 +27,7 @@ void loop() {
 	lights.draw();
 	display.draw();
 	timer.update();
+	fans.update();
 }
 
 uint8_t cmd = 0x00;
@@ -57,6 +61,9 @@ void serialEvent() {
 			case 0xD1 : display.servers[arg] = c; cmd = 0x00; break;
 			case 0xD5 : display.unreadMail   = c; cmd = 0xD6; break;
 			case 0xD6 : display.totalMail    = c; cmd = 0x00; break;
+
+			case 0xE0 : fans.setSpeed1(c); cmd = 0xE1; break;
+			case 0xE1 : fans.setSpeed2(c); cmd = 0x00; break;
 
 
 			case 0x00 : cmd = c;    break;
